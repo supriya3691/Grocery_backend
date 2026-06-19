@@ -1,0 +1,10 @@
+//packages
+
+express
+nodemon
+mangoose
+dotenv
+bcrypt.js
+jwt authentication
+cors
+multer
