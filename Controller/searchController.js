@@ -1,15 +1,10 @@
 const Product = require("../models/Products")
 
-// ✅ Fixed: search is now optional; supports category, sortBy, order, page, limit
-// Used by: GetProducts (search+filter), FruitProducts, VegetableProducts, FoodGrains (category only)
+// Supports search, category filter, sorting, pagination
+// category can be: 'fruits', 'vegetables', 'food-grains', 'dairy', '' or 'all' (returns all)
 exports.searchProducts = async(req, res) => {
     try {
         const { search, category, sortBy = "createdAt", order = "desc", page = 1, limit = 50 } = req.query
-
-        // At least one of search or category must be provided
-        if (!search && !category) {
-            return res.status(400).json({ msg: "Please provide a search term or category" })
-        }
 
         // Build query dynamically
         const query = {}
@@ -18,7 +13,8 @@ exports.searchProducts = async(req, res) => {
             query.name = { $regex: search, $options: "i" }
         }
 
-        if (category) {
+        // Only apply category filter if it's a real category (not empty or 'all')
+        if (category && category !== "all" && category !== "All") {
             query.category = category
         }
 
