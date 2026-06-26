@@ -1,0 +1,5 @@
+to get all products = https://grocery-backend-gv7o.onrender.com/api/show-products
+searching by product name = https://grocery-backend-gv7o.onrender.com/api/search?search=grapes
+seaching by tomato = https://grocery-backend-gv7o.onrender.com/api/search?search=tomato
+fetching by filename = http://localhost:3000/uploads/1780121429709-istockphoto-1095798054-2048x2048-(1).jpg
+get ALL images = https://grocery-backend-gv7o.onrender.com/uploads/all-images

@@ -9,37 +9,52 @@ const emailRoutes = require("./routes/emailRoutes.js")
 const cartRoutes = require("./routes/cartRoutes.js")
 const cors = require("cors")
 
-// import express from "express" // this is for module method in the package.json
-
 const app = express()
 app.use(express.json())
+
+// ✅ Dynamic CORS — allows localhost in dev and FRONTEND_URL (Vercel) in production
+const allowedOrigins = [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://localhost:5175",
+    "http://localhost:3000",
+    process.env.FRONTEND_URL,           // e.g. https://your-app.vercel.app
+].filter(Boolean)   // removes undefined if FRONTEND_URL not set
+
 app.use(cors({
-    origin: [
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://localhost:5175",
-        "http://localhost:3000",
-    ],
+    origin: (origin, callback) => {
+        // Allow requests with no origin (mobile apps, Postman, curl)
+        if (!origin) return callback(null, true)
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true)
+        } else {
+            callback(new Error(`CORS blocked: ${origin}`))
+        }
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }))
 
+// ✅ Health check — used by Render to confirm server is alive (also wakes it up)
+app.get("/health", (req, res) => {
+    res.status(200).json({ status: "ok", timestamp: new Date().toISOString() })
+})
 
-console.log("checking", process.env.MONGO_URI)
+// ✅ Root route — avoids "Cannot GET /" 404 on Render dashboard
+app.get("/", (req, res) => {
+    res.status(200).json({ msg: "Grocery API is running 🛒", version: "1.0.0" })
+})
 
 mongoose.connect(process.env.MONGO_URI)
-    // console.log(MONGO_URI)
     .then(() => {
-        console.log('database connected sucessfully')
+        console.log('✅ Database connected successfully')
     })
     .catch((error) => {
-        console.log(error.message)
+        console.error('❌ DB connection error:', error.message)
     })
 
-// app.use(express.json())
+app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 
-app.use("/uploads", express.static("uploads"))
-// app.use("/api", productRoutes)
 app.use("/api", productRoutes)
 app.use("/admin", adminRoutes)
 app.use("/email", emailRoutes)
@@ -65,9 +80,7 @@ app.get("/uploads/all-images", (req, res) => {
     })
 })
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")))
-
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
-    console.log(`server is ready: http://localhost:${PORT}`)
+    console.log(`🚀 Server running: http://localhost:${PORT}`)
 })

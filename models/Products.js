@@ -1,35 +1,35 @@
 const mongoose = require("mongoose")
 
 const category_Enum = [
-    "vegetables", "fruits","food-grains"
+    "vegetables", "fruits", "food-grains", "dairy"
 ]
 
 const Unit_Enum = [
-    "500gm", "1kg","2kgs","5kgs"
+    "500gm", "1kg", "2kgs", "5kgs"
 ]
 
 const productSchema = new mongoose.Schema({
     name:{
         type:String,
         required:true
-    },desc:{
+    },
+    desc:{
         type:String,
         required:true
     },
     price:{
         type: Number
     },
-    categogy:{
+    category:{          // ✅ Fixed typo: was "categogy"
         type:String,
-        values:category_Enum
+        enum: category_Enum  // ✅ Fixed: was "values:"
     },
     unit:{
         type:String,
-        values: Unit_Enum
+        enum: Unit_Enum      // ✅ Fixed: was "values:"
     },
     image:{
         type:String,
-
     },
     isActive:{
         type:Boolean

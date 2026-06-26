@@ -1,0 +1,34 @@
+to get all products = https://grocery-backend-gv7o.onrender.com/api/show-products
+searching by product name = https://grocery-backend-gv7o.onrender.com/api/search?search=grapes
+seaching by tomato = https://grocery-backend-gv7o.onrender.com/api/search?search=tomato
+fetching by filename = http://localhost:3000/uploads/1780121429709-istockphoto-1095798054-2048x2048-(1).jpg
+get ALL images = https://grocery-backend-gv7o.onrender.com/uploads/all-images
+
+
+Api's
+
+export const productUrl = "http://13.235.76.33:3000/products"
+export const imageUrl = "http://13.235.76.33:3000"
+export const adminUrl = "http://13.235.76.33:3000/admin"
+export const emailUrl = "http://13.235.76.33:3000/email"
+export const cartUrl = "http://13.235.76.33:3000/cart"
+
+product Routes 
+router.post("/add-product", upload.single("image"), controller.createProduct)
+router.get("/all-products", controller.getProducts)
+router.get("/search",searchProducts.searchProducts)
+router.get("/:id", controller.productById)
+
+Admin Routes
+router.post("/register", controller.register)
+router.post("/login", controller.login)
+
+Email Routes
+router.post("/send-otp", userController.sendOtp)
+router.post("/verify-opt", userController.verifyOtp)
+
+Cart Routes
+router.get("/details", middle.userMiddleware, cartController.getCart)
+router.post("/add-to-cart", middle.userMiddleware, cartController.addToCart)
+//router.put("/update", middle.userMiddleware, cartController.updateQuantity)
+router.delete("/delete/:productId", middle.userMiddleware, cartController.removeFromCart)

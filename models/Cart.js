@@ -1,7 +1,6 @@
-// const { Timestamp } = require("mongodb")
 const mongoose = require("mongoose")
 
-const cartSchema =new mongoose.Schema({
+const cartSchema = new mongoose.Schema({
     user:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User",
@@ -22,6 +21,6 @@ const cartSchema =new mongoose.Schema({
             }
         }
     ]
-},{Timestamp:true})
+},{timestamps:true})  // ✅ Fixed: was {Timestamp:true} (capital T, wrong key)
 
 module.exports = mongoose.model("Cart", cartSchema)

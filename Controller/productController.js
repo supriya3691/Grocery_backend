@@ -24,3 +24,15 @@ exports.getProducts= async(req, res) =>{
         console.error(error.message)
     }
 }
+
+exports.getProductById = async(req, res) =>{
+    try{
+        const { id } = req.params
+        const record = await product.findById(id)
+        if(!record) return res.status(404).json({msg:"Product not found"})
+        return res.status(200).json({msg:"success", record})
+    }catch(error){
+        console.error(error.message)
+        return res.status(500).json({msg:"Server error"})
+    }
+}

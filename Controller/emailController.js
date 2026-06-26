@@ -14,7 +14,7 @@ exports.sendOtp = async(req, res)=>{
         let user = await User.findOne({email})
 
         if(!user){
-            userRecord = await User.create({name, email})
+            user = await User.create({name, email})
         }
         const otp = generateOtp()
         user.otp = otp
